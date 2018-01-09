@@ -11,12 +11,13 @@
     ],
     "require": {
         "php": ">=7.0.0",
-        "illuminate/database": ">= 5.5"
+        "illuminate/database": "5.5.*"
     },
     "autoload": {
         "psr-4": {
             "ResultSystems\\Relationships\\": "src/Relationships"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
