@@ -1,0 +1,22 @@
+{
+    "name": "resultsystems/relationships",
+    "description": "Several Relations for Laravel.",
+    "keywords": ["relation", "laravel"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Leandro Henrique Reis",
+            "email": "emtudo@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "illuminate/database": ">= 5.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "ResultSystems\\Relationships\\": "src/Relationships"
+        }
+    },
+    "minimum-stability": "dev"
+}
