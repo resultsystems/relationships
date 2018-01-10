@@ -5,6 +5,7 @@ This package adds two more kind of relationships based on Laravel's original fro
 - [Installation](#installation)
 - [Has Many Through Several](#has-many-through-several)
 - [How To Use](#how-to-use)
+- [How To Use Video In Portuguese](https://goo.gl/4aL6MM)
 
 ## Installation
 
