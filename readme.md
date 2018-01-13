@@ -12,7 +12,7 @@ This package adds two more kind of relationships based on Laravel's original fro
 In the **require** key of **composer.json** file add the following:
 
 ```php
-"resultsystems/relationships": "~0.1"
+"resultsystems/relationships": "~0.2"
 ```
 
 **Important:** Do not use `dev-master`. Instead, use the tagged version, like shown before.
