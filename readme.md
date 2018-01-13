@@ -219,7 +219,6 @@ class Frequency extends Model
             Schedule::class,
         ], null); // null -> option (localKey -> id)
     }
-
 }
 ```
  
