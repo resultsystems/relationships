@@ -102,75 +102,7 @@ class Frequency extends Model
 }
 ```
 
-<a name="how-to-use"></a>
-## How To Use
- 
-### Mode 1
- 
-```php
-<?php
-
-namespace App;
-
-use ResultSystems\Relationships\Model;
-
-class Group extends Model
-{
-    public function teachers()
-    {
-        return $this->hasManyThroughSeveral(
-            Teacher::class, // -> 'App\Teacher'
-            Skill::class, // -> 'App\Skill'
-            Schedule::class // -> 'App\Schedule'
-        );
-    }
-
-    public function subjects()
-    {
-        return $this->hasManyThroughSeveral(
-            'App\Subject', // -> Subject::class
-            'App\Skill', // -> Skill::class
-            'App\Schedule' // -> Schedule::class
-        );
-    }
-}
-```
- 
-### Mode 2
- 
-```php
-<?php
-
-namespace App;
-
-use Illuminate\Database\Eloquent\Model;
-use ResultSystems\Relationships\Traits\RelationshipsTrait;
-
-class Group extends Model
-{
-    use RelationshipsTrait;
-
-    public function teachers()
-    {
-        return $this->hasManyThroughSeveral(
-            Teacher::class, // -> 'App\Teacher'
-            Skill::class, // -> 'App\Skill'
-            Schedule::class // -> 'App\Schedule'
-        );
-    }
- 
-    public function subjects()
-    {
-        return $this->hasManyThroughSeveral(
-            'App\Subject', // -> Subject::class
-            'App\Skill', // -> Skill::class
-            'App\Schedule' // -> Schedule::class
-        );
-    }
-}
-```
- 
- 
+  
  <a name="has-many-through-several"></a>
 ## Has Many Through Several
 
@@ -273,27 +205,21 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use ResultSystems\Relationships\Traits\RelationshipsTrait;
 
-class Group extends Model
+class Frequency extends Model
 {
     use RelationshipsTrait;
 
-    public function teachers()
+    public function subject()
     {
-        return $this->hasManyThroughSeveral(
-            Teacher::class, // -> 'App\Teacher'
-            Skill::class, // -> 'App\Skill'
-            Schedule::class // -> 'App\Schedule'
-        );
+        // You can add several model in array
+
+        return $this->hasOneThroughSeveral([
+            Subject::class,
+            Skill::class,
+            Schedule::class,
+        ], null); // null -> option (localKey -> id)
     }
- 
-    public function subjects()
-    {
-        return $this->hasManyThroughSeveral(
-            'App\Subject', // -> Subject::class
-            'App\Skill', // -> Skill::class
-            'App\Schedule' // -> Schedule::class
-        );
-    }
+
 }
 ```
  
