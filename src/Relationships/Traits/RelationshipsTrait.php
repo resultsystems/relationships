@@ -3,6 +3,7 @@
 namespace ResultSystems\Relationships\Traits;
 
 use ResultSystems\Relationships\HasManyThroughSeveral;
+use ResultSystems\Relationships\HasOneThroughSeveral;
 
 trait RelationshipsTrait
 {
@@ -62,5 +63,39 @@ trait RelationshipsTrait
         $query->join($through->getTable(), $thirdKey, '=', $thirdLocalKey);
 
         return new HasManyThroughSeveral($query, $this, $throughSecond, $through, $firstKey, $secondKey, $localKey, $secondLocalKey);
+    }
+
+    /**
+     * Define a one-to-one relationship.
+     *
+     * @param array  $relations
+     * @param string $localKey
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function hasOneThroughSeveral(array $relations, $localKey = null)
+    {
+        $helpers = new Helpers($this);
+        $currentRelation = current($relations);
+        $related = $helpers->getClassNameFromCurrent($currentRelation, $relations);
+
+        $instance = $this->newRelatedInstance($related);
+        $query = $instance
+            ->newQuery();
+
+        $joins = $helpers->getJoinsRelations($relations, $localKey);
+        foreach ($joins as $join) {
+            $query->join($join['table'], $join['key'], '=', $join['foreign_key']);
+        }
+
+        $lastRelation = end($relations);
+
+        $lastKey = $helpers->getKeyNameFromModelOrData($this, $this, $lastRelation);
+
+        $key = $localKey ?? $this->getKeyName();
+
+        $query->where($this->getTable().'.'.$key, $this->getAttribute($key));
+
+        return new HasOneThroughSeveral($query, $this);
     }
 }
