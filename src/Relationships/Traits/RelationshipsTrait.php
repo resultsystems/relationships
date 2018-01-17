@@ -70,8 +70,8 @@ trait RelationshipsTrait
      * Define a one-to-many-through-several relationship.
      *
      * @param array  $relations
+     * @param string $foreignKey
      * @param string $localKey
-     * @param mixed  $foreignKey
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -95,20 +95,23 @@ trait RelationshipsTrait
 
         $key = $localKey ?? $this->getKeyName();
 
-        $query->where($this->getTable().'.'.$key, $this->getAttribute($key));
+        $foreignKey = $foreignKey ?? $firstRelation->getTable().'.'.$this->getForeignKey();
 
-        return new HasManyThroughSeveral($query, $this, $localKey);
+        $localKey = $localKey ?? $this->getKeyName();
+
+        return new HasManyThroughSeveral($query, $this, $foreignKey, $localKey);
     }
 
     /**
      * Define a one-to-one-through-several relationship.
      *
      * @param array  $relations
+     * @param string $foreignKey
      * @param string $localKey
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function hasOneThroughSeveral(array $relations, $localKey = null)
+    public function hasOneThroughSeveral(array $relations, $foreignKey = null, $localKey = null)
     {
         $helpers = new Helpers($this);
         $currentRelation = current($relations);
@@ -123,13 +126,19 @@ trait RelationshipsTrait
         $joins = $helpers->getJoinsRelations($relations, $localKey);
         foreach ($joins as $join) {
             $query->join($join['table'], $join['key'], '=', $join['foreign_key']);
+            // $query->addSelect($join['select_key']);
+            // $query->addSelect($join['select_key'].' as has_one_'.$join['select_key']);
             // $query->addSelect($join['select_key'].' as has_one_'.str_replace('.', '_', $join['select_key']));
         }
 
         $key = $localKey ?? $this->getKeyName();
 
-        $query->where($this->getTable().'.'.$key, $this->getAttribute($key));
+//        $query->where($this->getTable().'.'.$key, $this->getAttribute($key));
 
-        return new HasOneThroughSeveral($query, $this);
+        $foreignKey = $foreignKey ?: $this->getTable().'.'.$firstRelation->getKeyName();
+
+        $localKey = $localKey ?: $firstRelation->getKeyName();
+
+        return new HasOneThroughSeveral($query, $this, $foreignKey, $localKey);
     }
 }

@@ -8,26 +8,21 @@ use Illuminate\Database\Eloquent\Relations\HasMany as LaravelHasMany;
 
 class HasManyThroughSeveral extends LaravelHasMany
 {
-    protected $secondParent;
-
     /**
      * Create a new has many throught threee relationship instance.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param \Illuminate\Database\Eloquent\Model   $farParent
-     * @param \Illuminate\Database\Eloquent\Model   $throughParent
-     * @param \Illuminate\Database\Eloquent\Model   $throughSecondParent
+     * @param string                                $foreignKey
      * @param string                                $firstKey
-     * @param string                                $secondKey
      * @param string                                $localKey
-     * @param string                                $secondLocalKey
-     * @param mixed                                 $foreignKey
      */
-    public function __construct(Builder $query, Model $parent, $localKey)
+    public function __construct(Builder $query, Model $parent, $foreignKey, $localKey)
     {
         $this->localKey = $localKey;
+        $this->foreignKey = $foreignKey;
 
-        parent::__construct($query, $parent, null, $localKey);
+        parent::__construct($query, $parent, $foreignKey, $localKey);
     }
 
     /**
@@ -35,5 +30,8 @@ class HasManyThroughSeveral extends LaravelHasMany
      */
     public function addConstraints()
     {
+        if (static::$constraints) {
+            $this->query->where($this->foreignKey, '=', $this->getParentKey());
+        }
     }
 }

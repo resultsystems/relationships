@@ -2,6 +2,7 @@
 
 namespace ResultSystems\Relationships;
 
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne as LaravelHasOne;
@@ -15,12 +16,15 @@ class HasOneThroughSeveral extends LaravelHasOne
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param \Illuminate\Database\Eloquent\Model   $farParent
-     * @param string                                $firstKey
-     * @param string                                $secondKey
+     * @param string                                $foreignKey
+     * @param string                                $localKey
      */
-    public function __construct(Builder $query, Model $farParent, $firstKey = null, $secondKey = null)
+    public function __construct(Builder $query, Model $farParent, $foreignKey = null, $localKey = null)
     {
-        parent::__construct($query, $farParent, null, null);
+        $this->localKey = $localKey;
+        $this->foreignKey = $foreignKey;
+
+        parent::__construct($query, $farParent, $foreignKey, $localKey);
     }
 
     /**
@@ -28,5 +32,21 @@ class HasOneThroughSeveral extends LaravelHasOne
      */
     public function addConstraints()
     {
+        if (static::$constraints) {
+            $this->query->where($this->foreignKey, '=', $this->getParentKey());
+        }
+    }
+
+    /**
+     * Initialize the relation on a set of models.
+     *
+     * @param array  $models
+     * @param string $relation
+     *
+     * @return array
+     */
+    public function initRelation(array $models, $relation)
+    {
+        throw new Exception("Don't use with or load");
     }
 }
