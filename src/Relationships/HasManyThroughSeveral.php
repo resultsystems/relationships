@@ -4,9 +4,9 @@ namespace ResultSystems\Relationships;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough as LaravelHasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasMany as LaravelHasMany;
 
-class HasManyThroughSeveral extends LaravelHasManyThrough
+class HasManyThroughSeveral extends LaravelHasMany
 {
     protected $secondParent;
 
@@ -21,30 +21,19 @@ class HasManyThroughSeveral extends LaravelHasManyThrough
      * @param string                                $secondKey
      * @param string                                $localKey
      * @param string                                $secondLocalKey
+     * @param mixed                                 $foreignKey
      */
-    public function __construct(Builder $query, Model $farParent, Model $throughParent, Model $throughSecondParent, $firstKey, $secondKey, $localKey, $secondLocalKey)
+    public function __construct(Builder $query, Model $parent, $localKey)
     {
-        $this->secondParent = $throughSecondParent;
-        parent::__construct($query, $farParent, $throughParent, $firstKey, $secondKey, $localKey, $secondLocalKey);
+        $this->localKey = $localKey;
+
+        parent::__construct($query, $parent, null, $localKey);
     }
 
     /**
-     * Get the qualified foreign key on the related model.
-     *
-     * @return string
+     * Set the base constraints on the relation query.
      */
-    public function getQualifiedForeignKeyName()
+    public function addConstraints()
     {
-        return $this->secondParent->getTable().'.'.$this->secondParent->getKeyName();
-    }
-
-    /**
-     * Get the fully qualified parent key name.
-     *
-     * @return string
-     */
-    public function getQualifiedParentKeyName()
-    {
-        return $this->parent->getTable().'.'.$this->secondParent->getForeignKey();
     }
 }

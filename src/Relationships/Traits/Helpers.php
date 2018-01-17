@@ -11,24 +11,8 @@ class Helpers
         $this->model = $model;
     }
 
-    public function getJoinsRelations(array $relations, $localKey = null)
+    public function getJoinsRelations(array $relations, $localKey = null, $reverse = false)
     {
-        // inner join `skills` on `subject_id` = `subjects`.`id`
-        // inner join `schedules` on `skill_id` = `skills`.`id`
-        // inner join `frequencies` on `schedule_id` = `schedules`.`id` where `frequencies`.`id` = ? and `subjects`.`deleted_at` is null limit 1
-
-        // {"table":"skills","key":"skills.subject_id","foreign_key":"subjects.id"},
-        // {"table":"schedules","key":"schedules.skill_id","foreign_key":"skills.id"},
-        // {"table":"frequencies","key":"frequencies.schedule_id","foreign_key":"schedules.id"}
-
-        // {"table":"skills","key":"skills.subject_id","foreign_key":"subjects.id"},
-        // {"table":"schedules","key":"schedules.skill_id","foreign_key":"skills.id"},
-        // {"table":"frequencies","key":"frequencies.schedule_id","foreign_key":"schedules.id"}
-
-        // {"table":"skills","key":"skills.subject_id","foreign_key":"subjects.id"},
-        // {"table":"schedules","key":"schedules.skill_id","foreign_key":"skills.id"},
-        // {"table":"frequencies","key":"frequencies.schedule_id","foreign_key":"schedules.id"}
-
         reset($relations);
         $queries = [];
         while ($current = current($relations)) {
@@ -43,12 +27,17 @@ class Helpers
             $queries[] = [
                 //'model' => get_class($model),
                 'table' => $next->getTable(),
-                'key' => $this->getKeyNameFromModelOrData($model, $next, $current),
-                'foreign_key' => $this->getForeignKeyFromModelOrData($next, $model, $current),
+                'key' => $this->getKeyNameFromModelOrData($model, $next, $current, $reverse),
+                'foreign_key' => $this->getForeignKeyFromModelOrData($next, $model, $current, $reverse),
             ];
         }
 
         return $queries;
+    }
+
+    public function getReverseJoinsRelations(array $relations, $localKey = null)
+    {
+        return $this->getJoinsRelations($relations, $localKey, true);
     }
 
     public function getClassNameFromCurrent($current, $relations)
@@ -69,8 +58,12 @@ class Helpers
         return new $current();
     }
 
-    public function getKeyNameFromModelOrData($model, $nextModel, $current)
+    public function getKeyNameFromModelOrData($model, $nextModel, $current, $reverse = false)
     {
+        if ($reverse) {
+            return $this->getReverseKeyNameFromModelOrData($model, $nextModel, $current);
+        }
+
         if (is_array($current)) {
             return current($current);
         }
@@ -78,13 +71,35 @@ class Helpers
         return $nextModel->getTable().'.'.$model->getForeignKey();
     }
 
-    public function getForeignKeyFromModelOrData($model, $lastModel, $current)
+    public function getReverseKeyNameFromModelOrData($model, $nextModel, $current)
     {
+        if (is_array($current)) {
+            return current($current);
+        }
+
+        return $model->getTable().'.'.$nextModel->getKeyName();
+    }
+
+    public function getForeignKeyFromModelOrData($model, $lastModel, $current, $reverse = false)
+    {
+        if ($reverse) {
+            return $this->getReverseForeignKeyFromModelOrData($model, $lastModel, $current);
+        }
+
         if (is_array($current)) {
             return key($current);
         }
 
         return $lastModel->getTable().'.'.$model->getKeyName();
+    }
+
+    public function getReverseForeignKeyFromModelOrData($model, $lastModel, $current)
+    {
+        if (is_array($current)) {
+            return key($current);
+        }
+
+        return $model->getTable().'.'.$lastModel->getForeignKey();
     }
 
     public function getKeyName($model, $key = null)

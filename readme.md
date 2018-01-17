@@ -4,6 +4,7 @@ This package adds two more kind of relationships based on Laravel's original fro
 
 - [Installation](#installation)
 - [Has One Through Several](#has-one-through-several)
+- [Has Many Through Two](#has-many-through-two)
 - [Has Many Through Several](#has-many-through-several)
 - [How To Use](#how-to-use)
 
@@ -103,6 +104,64 @@ class Frequency extends Model
 ```
 
   
+ <a name="has-many-through-two"></a>
+## Has Many Through Two
+
+ - Similar to Laravel's hasManyThrough
+
+The "has-many-through-two" relationship provides a convenient shortcut for accessing distant relations via an intermediate relation. For example, a `Group` model might have many `Teacher` models through the intermediates `Schedule` and `Skill` model. In this example, you could easily gather all teachers for a given group. Let's look at the tables required to define this relationship:
+
+    groups
+        id - integer
+        name - string
+
+    teachers
+        id - integer
+        name - string
+
+    schedules
+        id - integer
+        group_id - integer
+        skill_id - integer
+        name - string
+
+    skills
+        id - integer
+        teacher_id - integer
+        subject_id - integer
+        title - string
+
+        // model = group
+        // groups.id = schedules.group_id
+        // skills.id = schedules.skill_id
+        // teachers.id = skills.teacher_id
+
+```php
+<?php
+
+namespace App;
+
+use ResultSystems\Relationships\Model;
+
+class Group extends Model
+{
+    public function teachers()
+    {
+        return $this->hasManyThroughTwo(
+           Teacher::class,
+           Skill::class,
+           Schedule::class,
+            null, // options -> group_id [schedules.group_id] (foreighKey from group)
+            null, // options ->  group_id [schedules.group_id] (where schedules.group_id = ?)
+            null, // options -> teacher_id [skills.teacher_id]
+            null, // options -> id [groups.id]
+            true, // options -> distinct teachers [default: true]
+            []// options -> filters's teachers ['name' => 'Leandro']
+        );
+    }
+}
+```
+
  <a name="has-many-through-several"></a>
 ## Has Many Through Several
 
@@ -146,17 +205,13 @@ class Group extends Model
 {
     public function teachers()
     {
-        return $this->hasManyThroughSeveral(
+        return $this->hasManyThroughSeveral([
            Teacher::class,
            Skill::class,
-           Schedule::class,
-            null, // options -> group_id [schedules.group_id] (foreighKey from group)
-            null, // options ->  group_id [schedules.group_id] (where schedules.group_id = ?)
-            null, // options -> teacher_id [skills.teacher_id]
-            null, // options -> id [groups.id]
-            true, // options -> distinct teachers [default: true]
-            []// options -> filters's teachers ['name' => 'Leandro']
-        );
+           Schedule::class => [
+                'schedules.group_id' => 'groups.id',
+            ],
+        ]);
     }
 }
 ```
@@ -177,7 +232,7 @@ class Group extends Model
 {
     public function teachers()
     {
-        return $this->hasManyThroughSeveral(
+        return $this->hasManyThroughTwo(
             Teacher::class, // -> 'App\Teacher'
             Skill::class, // -> 'App\Skill'
             Schedule::class // -> 'App\Schedule'
@@ -186,11 +241,13 @@ class Group extends Model
 
     public function subjects()
     {
-        return $this->hasManyThroughSeveral(
-            'App\Subject', // -> Subject::class
-            'App\Skill', // -> Skill::class
-            'App\Schedule' // -> Schedule::class
-        );
+        return $this->hasManyThroughSeveral([
+            Subject::class,
+            Skill::class,
+            Schedule::class => [
+                'schedules.group_id' => 'groups.id',
+            ],
+        ]);
     }
 }
 ```
