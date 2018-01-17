@@ -80,14 +80,17 @@ trait RelationshipsTrait
         $helpers = new Helpers($this);
         $currentRelation = current($relations);
         $related = $helpers->getClassNameFromCurrent($currentRelation, $relations);
+        $firstRelation = new $related();
 
         $instance = $this->newRelatedInstance($related);
         $query = $instance
-            ->newQuery();
+            ->newQuery()
+            ->select($firstRelation->getTable().'.*');
 
         $joins = $helpers->getReverseJoinsRelations($relations, $localKey);
         foreach ($joins as $join) {
             $query->join($join['table'], $join['key'], '=', $join['foreign_key']);
+            // $query->addSelect($join['select_key'].' as has_many_'.str_replace('.', '_', $join['select_key']));
         }
 
         $key = $localKey ?? $this->getKeyName();
@@ -110,14 +113,17 @@ trait RelationshipsTrait
         $helpers = new Helpers($this);
         $currentRelation = current($relations);
         $related = $helpers->getClassNameFromCurrent($currentRelation, $relations);
+        $firstRelation = new $related();
 
         $instance = $this->newRelatedInstance($related);
         $query = $instance
-            ->newQuery();
+            ->newQuery()
+            ->select($firstRelation->getTable().'.*');
 
         $joins = $helpers->getJoinsRelations($relations, $localKey);
         foreach ($joins as $join) {
             $query->join($join['table'], $join['key'], '=', $join['foreign_key']);
+            // $query->addSelect($join['select_key'].' as has_one_'.str_replace('.', '_', $join['select_key']));
         }
 
         $key = $localKey ?? $this->getKeyName();

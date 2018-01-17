@@ -29,6 +29,7 @@ class Helpers
                 'table' => $next->getTable(),
                 'key' => $this->getKeyNameFromModelOrData($model, $next, $current, $reverse),
                 'foreign_key' => $this->getForeignKeyFromModelOrData($next, $model, $current, $reverse),
+                'select_key' => $this->getSelectKeyFromModelOrData($next, $model, $current, $reverse),
             ];
         }
 
@@ -78,6 +79,15 @@ class Helpers
         }
 
         return $model->getTable().'.'.$nextModel->getKeyName();
+    }
+
+    public function getSelectKeyFromModelOrData($model, $lastModel, $current, $reverse = false)
+    {
+        if (is_array($current)) {
+            return key($current);
+        }
+
+        return $model->getTable().'.'.$model->getKeyName();
     }
 
     public function getForeignKeyFromModelOrData($model, $lastModel, $current, $reverse = false)
