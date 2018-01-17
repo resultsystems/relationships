@@ -165,7 +165,7 @@ class Group extends Model
  <a name="has-many-through-several"></a>
 ## Has Many Through Several
 
- - Similar to Laravel's hasManyThrough
+ - Similar to Laravel's hasMany
 
 The "has-many-through-several" relationship provides a convenient shortcut for accessing distant relations via an intermediate relation. For example, a `Group` model might have many `Teacher` models through the intermediates `Schedule` and `Skill` model. In this example, you could easily gather all teachers for a given group. Let's look at the tables required to define this relationship:
 
