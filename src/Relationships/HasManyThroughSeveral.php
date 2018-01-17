@@ -24,14 +24,4 @@ class HasManyThroughSeveral extends LaravelHasMany
 
         parent::__construct($query, $parent, $foreignKey, $localKey);
     }
-
-    /**
-     * Set the base constraints on the relation query.
-     */
-    public function addConstraints()
-    {
-        if (static::$constraints) {
-            $this->query->where($this->foreignKey, '=', $this->getParentKey());
-        }
-    }
 }

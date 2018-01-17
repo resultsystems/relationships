@@ -85,17 +85,19 @@ trait RelationshipsTrait
         $instance = $this->newRelatedInstance($related);
         $query = $instance
             ->newQuery()
+            ->distinct()
             ->select($firstRelation->getTable().'.*');
 
         $joins = $helpers->getReverseJoinsRelations($relations, $localKey);
         foreach ($joins as $join) {
             $query->join($join['table'], $join['key'], '=', $join['foreign_key']);
-            // $query->addSelect($join['select_key'].' as has_many_'.str_replace('.', '_', $join['select_key']));
         }
+
+        $query->addSelect($join['select_key']);
 
         $key = $localKey ?? $this->getKeyName();
 
-        $foreignKey = $foreignKey ?? $firstRelation->getTable().'.'.$this->getForeignKey();
+        $foreignKey = $foreignKey ?? $join['foreign_key'];
 
         $localKey = $localKey ?? $this->getKeyName();
 
@@ -133,11 +135,9 @@ trait RelationshipsTrait
 
         $key = $localKey ?? $this->getKeyName();
 
-//        $query->where($this->getTable().'.'.$key, $this->getAttribute($key));
+        $foreignKey = $foreignKey ?? $this->getTable().'.'.$firstRelation->getKeyName();
 
-        $foreignKey = $foreignKey ?: $this->getTable().'.'.$firstRelation->getKeyName();
-
-        $localKey = $localKey ?: $firstRelation->getKeyName();
+        $localKey = $localKey ?? $firstRelation->getKeyName();
 
         return new HasOneThroughSeveral($query, $this, $foreignKey, $localKey);
     }
