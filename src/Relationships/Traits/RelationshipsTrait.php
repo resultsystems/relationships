@@ -2,7 +2,7 @@
 
 namespace ResultSystems\Relationships\Traits;
 
-use ResultSystems\Relationships\HasManyThroughSeveral;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use ResultSystems\Relationships\HasManyThroughTwo;
 use ResultSystems\Relationships\HasOneThroughSeveral;
 
@@ -101,7 +101,7 @@ trait RelationshipsTrait
 
         $localKey = $localKey ?? $this->getKeyName();
 
-        return new HasManyThroughSeveral($query, $this, $foreignKey, $localKey);
+        return new HasMany($query, $this, $foreignKey, $localKey);
     }
 
     /**
