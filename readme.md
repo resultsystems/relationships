@@ -79,7 +79,7 @@ class Frequency extends Model
             Subject::class,
             Skill::class,
             Schedule::class,
-        ], null); // null -> option (localKey -> id)
+        ], null, null); // null -> optional (foreignKey -> schedule_id, localKey -> id)
     }
 
     // or
@@ -97,7 +97,7 @@ class Frequency extends Model
             Schedule::class => [
                 'schedules.id' => 'frequencies.schedule_id',
             ],
-        ], null); // null -> option (localKey -> id)
+        ], null, null); // null -> optional foreignKey -> schedule_id, localKey -> id)
     }
 }
 ```
@@ -170,15 +170,6 @@ use ResultSystems\Relationships\Model;
 
 class Group extends Model
 {
-    public function teachers()
-    {
-        return $this->hasManyThroughTwo(
-            Teacher::class, // -> 'App\Teacher'
-            Skill::class, // -> 'App\Skill'
-            Schedule::class // -> 'App\Schedule'
-        );
-    }
-
     public function subjects()
     {
         return $this->hasManyThroughSeveral([
@@ -214,7 +205,7 @@ class Frequency extends Model
             Subject::class,
             Skill::class,
             Schedule::class,
-        ], null); // null -> option (localKey -> id)
+        ], null, null); // null -> option (foreignKey -> schedule_id, localKey -> id)
     }
 }
 ```
