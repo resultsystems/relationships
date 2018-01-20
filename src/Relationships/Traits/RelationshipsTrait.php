@@ -95,11 +95,14 @@ trait RelationshipsTrait
 
         $query->addSelect($join['select_key']);
 
-        $key = $localKey ?? $this->getKeyName();
+        $key = $localKey ?? $this->getTable().'.'.$this->getKeyName();
+        $value = $this->{$this->getKeyName()};
 
         $foreignKey = $foreignKey ?? $join['foreign_key'];
 
         $localKey = $localKey ?? $this->getKeyName();
+
+        $query->where($key, $value);
 
         return new HasMany($query, $this, $foreignKey, $localKey);
     }
