@@ -25,7 +25,6 @@ class Helpers
             }
 
             $queries[] = [
-                //'model' => get_class($model),
                 'table' => $next->getTable(),
                 'key' => $this->getKeyNameFromModelOrData($model, $next, $current, $reverse),
                 'foreign_key' => $this->getForeignKeyFromModelOrData($next, $model, $current, $reverse),
@@ -110,10 +109,5 @@ class Helpers
         }
 
         return $model->getTable().'.'.$lastModel->getForeignKey();
-    }
-
-    public function getKeyName($model, $key = null)
-    {
-        return $key ?? $model->getKeyName;
     }
 }
