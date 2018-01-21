@@ -43,7 +43,7 @@ class Helpers
 
     public function getClassNameFromCurrent($current, $relations)
     {
-        if (is_array($current) && !empty($current)) {
+        if (is_array($current)) {
             return key($relations);
         }
 
@@ -52,7 +52,7 @@ class Helpers
 
     public function getRelationInstanceFromCurrent($current, $relations)
     {
-        if (is_array($current) && !empty($current)) {
+        if (is_array($current)) {
             $current = key($relations);
         }
 
@@ -65,7 +65,7 @@ class Helpers
             return $this->getReverseKeyNameFromModelOrData($model, $nextModel, $current);
         }
 
-        if (is_array($current) && !empty($current)) {
+        if (is_array($current)) {
             return current($current);
         }
 
@@ -74,7 +74,7 @@ class Helpers
 
     public function getReverseKeyNameFromModelOrData($model, $nextModel, $current)
     {
-        if (is_array($current) && !empty($current)) {
+        if (is_array($current)) {
             return current($current);
         }
 
@@ -83,7 +83,7 @@ class Helpers
 
     public function getSelectKeyFromModelOrData($model, $lastModel, $current, $reverse = false)
     {
-        if (is_array($current) && !empty($current)) {
+        if (is_array($current)) {
             return key($current);
         }
 
@@ -96,7 +96,7 @@ class Helpers
             return $this->getReverseForeignKeyFromModelOrData($model, $lastModel, $current);
         }
 
-        if (is_array($current) && !empty($current)) {
+        if (is_array($current)) {
             return key($current);
         }
 
@@ -105,7 +105,7 @@ class Helpers
 
     public function getReverseForeignKeyFromModelOrData($model, $lastModel, $current)
     {
-        if (is_array($current) && !empty($current)) {
+        if (is_array($current)) {
             return key($current);
         }
 
