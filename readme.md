@@ -12,7 +12,7 @@ This package adds two more kind of relationships based on Laravel's original fro
 In the **require** key of **composer.json** file add the following:
 
 ```php
-"resultsystems/relationships": "~0.3"
+"resultsystems/relationships": "~0.4.0"
 ```
 
 **Important:** Do not use `dev-master`. Instead, use the tagged version, like shown before.
@@ -27,7 +27,7 @@ or
 ```php
 composer require resultsystems/relationships
 ```
-   
+
  <a name="has-one-through-several"></a>
 ## Has One Through Several
 
@@ -158,9 +158,9 @@ class Group extends Model
 
 <a name="how-to-use"></a>
 ## How To Use
- 
+
 ### Mode 1
- 
+
 ```php
 <?php
 
@@ -182,9 +182,9 @@ class Group extends Model
     }
 }
 ```
- 
+
 ### Mode 2
- 
+
 ```php
 <?php
 
@@ -209,5 +209,3 @@ class Frequency extends Model
     }
 }
 ```
- 
- 
