@@ -69,13 +69,12 @@ trait RelationshipsTrait
     /**
      * Define a one-to-many-through-several relationship.
      *
-     * @param array  $relations
      * @param string $foreignKey
      * @param string $localKey
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function hasManyThroughSeveral(array $relations, $foreignKey = null, $localKey = null)
+    public function hasManyThroughSeveral(array $relations, $foreignKey = null, $localKey = null, bool $distinct = true)
     {
         $helpers = new Helpers($this);
         $currentRelation = current($relations);
@@ -85,7 +84,9 @@ trait RelationshipsTrait
         $instance = $this->newRelatedInstance($related);
         $query = $instance
             ->newQuery()
-            ->distinct()
+            ->when($distinct, function ($query) {
+                $query->distinct();
+            })
             ->select($firstRelation->getTable().'.*');
 
         $joins = $helpers->getReverseJoinsRelations($relations, $localKey);
@@ -110,7 +111,6 @@ trait RelationshipsTrait
     /**
      * Define a one-to-one-through-several relationship.
      *
-     * @param array  $relations
      * @param string $foreignKey
      * @param string $localKey
      *
