@@ -9,9 +9,6 @@
             "email": "emtudo@gmail.com"
         }
     ],
-    "require": {
-        "php": ">=7.0.0"
-    },
     "autoload": {
         "psr-4": {
             "ResultSystems\\Relationships\\": "src/Relationships"
